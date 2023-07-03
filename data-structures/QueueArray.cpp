@@ -6,9 +6,8 @@ using namespace std;
 class Queue {
     private:
         int values[5];
+        int last = -1;
     public:
-            int last = -1;
-
         string enqueue(int value) {
             if (last < 4) {
             last++;
@@ -18,15 +17,15 @@ class Queue {
             return "queue is full";
         };
         int dequeue() {
-            int value = values[0];
             if (isEmpty()) {
                 return 0;
             }
+            int value = values[0];
             for (int i = 0; i < size() - 1; i++) {
                 int next = i + 1;
                 values[i] = values[next];
             }
-            last
+            last--;
             return value;
         };
         int front() {

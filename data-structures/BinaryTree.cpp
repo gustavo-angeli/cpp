@@ -24,22 +24,46 @@ class Node {
             }
         }
 
-        void remove(int value) {
-            if (left != nullptr && left->value == value) {
-                left = nullptr;
-            } else if (right != nullptr && right->value == value) {
-                right = nullptr;
+        Node* remove(int value) {
+            if (this == nullptr) {
+                return this;  // Empty tree or node not found
             }
+
             if (value < this->value) {
                 if (left != nullptr){
-                    left->remove(value);
+                    left = left->remove(value);
                 }
             } else if (value > this->value) {
                 if (right != nullptr) {
-                    right->remove(value);
+                    right = right->remove(value);
                 }
             }
-            
+            // Case 1: No child or one child
+            if (left == nullptr) {
+                Node* temp = right;
+                delete this;
+                return temp;
+            } else if (right == nullptr) {
+                Node* temp = left;
+                delete this;
+                return temp;
+            }
+
+            // Case 2: Two children
+            // Find the minimum value node from the right subtree (successor)
+            Node* successor = right;
+            while (successor->left != nullptr) {
+                successor = successor->left;
+            }
+
+            // Copy the data of the successor to the current node
+            value = successor->value;
+
+            // Delete the successor node
+            right = right->remove(successor->value);
+        
+
+            return this;
         }
 
         void inorderTraversal() {
@@ -55,18 +79,12 @@ class Node {
 
 int main() {
     Node* node = new Node(20);
-    
+
     node->insert(10);
     node->insert(30);
     node->insert(15);
     node->insert(25);
-
-    node->inorderTraversal();
-    cout << endl;
     
-    node->remove(10);
-    node->remove(30);
-    node->remove(15);
     node->remove(25);
 
     node->inorderTraversal();
